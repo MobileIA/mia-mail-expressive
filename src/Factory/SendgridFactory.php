@@ -13,6 +13,6 @@ class SendgridFactory
         // Obtenemos configuracion
         $config = $container->get('config')['sendgrid'];
         // creamos libreria
-        return new \Mobileia\Expressive\Mail\Service\Sendgrid($config['sendgrid']);
+        return new \Mobileia\Expressive\Mail\Service\Sendgrid($config);
     }
 }
