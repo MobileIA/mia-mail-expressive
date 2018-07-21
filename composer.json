@@ -1,0 +1,26 @@
+{
+    "name": "mobileia/mia-mail-expressive",
+    "description": "The library for Zend Expressive 3",
+    "version": "0.0.1",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [{
+        "name": "Matias Camiletti",
+        "homepage": "http://www.mobileia.com"
+    }],
+    "repositories": [{
+        "type": "git",
+        "url": "https://github.com/MobileIA/mia-mail-expressive.git"
+    }],
+    "require": {
+        "php": "^7.1",
+        "psr/container": "^1.0",
+        "sendgrid/sendgrid": "~5.5",
+        "zendframework/zend-view": "^2.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mobileia\\Expressive\\Mail\\": "src/"
+        }
+    }
+}
