@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mobileia\Expressive\Email\Service;
+namespace Mobileia\Expressive\Mail\Service;
 
 use Zend\View\Model\ViewModel;
 
