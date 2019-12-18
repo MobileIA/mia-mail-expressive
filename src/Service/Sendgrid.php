@@ -66,6 +66,35 @@ class Sendgrid
     /**
      * 
      * @param string $addTo
+     * @param string $copyTo
+     * @param string $subject
+     * @param string $template
+     * @param array $params
+     * @param string $textWithoutHtml
+     * @return type
+     */
+    public function sendWithCopy($addTo, $copyTo, $subject, $template, $params, $textWithoutHtml = '')
+    {
+        $from = new \SendGrid\Email($this->name, $this->from);
+        $to = new \SendGrid\Email($addTo, $addTo);
+        $content = new \SendGrid\Content("text/html", $this->view->render($this->getViewModel($template, $params)));
+        $mail = new \SendGrid\Mail($from, $subject, $to, $content);
+        
+        $copy = new \SendGrid\Email($copyTo, $copyTo);
+        $personalization = new \SendGrid\Personalization();
+        $personalization->addCc($copy);
+        $mail->addPersonalization($personalization);
+        
+        // Asignamos si contiene email puro texto.
+        if($textWithoutHtml != ''){
+            //$email->setText($textWithoutHtml);
+        }
+        // Enviamos Email
+        return $this->service->client->mail()->send()->post($mail);
+    }
+    /**
+     * 
+     * @param string $addTo
      * @param string $subject
      * @param string $template
      * @param array $params
