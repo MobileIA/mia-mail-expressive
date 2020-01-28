@@ -66,6 +66,40 @@ class Sendgrid
     /**
      * 
      * @param string $addTo
+     * @param string $subject
+     * @param string $template
+     * @param array $params
+     * @param string $textWithoutHtml
+     * @return type
+     */
+    public function sendWithFile($addTo, $subject, $template, $params, $fileUrl, $mimetype, $filename, $textWithoutHtml = '')
+    {
+        $email = new \SendGrid\Mail\Mail();
+        $email->setFrom($this->from, $this->name);
+        $email->setSubject($subject);
+        $email->addTo($addTo);
+        $email->addContent(
+            "text/html", $this->view->render($this->getViewModel($template, $params))
+        );
+        
+        $file_encoded = base64_encode(file_get_contents($fileUrl));
+        $email->addAttachment(
+            $file_encoded,
+            $mimetype,
+            $filename,
+            "attachment"
+        );
+        
+        // Asignamos si contiene email puro texto.
+        if($textWithoutHtml != ''){
+            $email->addContent("text/plain", $textWithoutHtml);
+        }
+        // Enviamos Email
+        return $this->service->send($email);
+    }
+    /**
+     * 
+     * @param string $addTo
      * @param string $copyTo
      * @param string $subject
      * @param string $template
@@ -75,22 +109,21 @@ class Sendgrid
      */
     public function sendWithCopy($addTo, $copyTo, $subject, $template, $params, $textWithoutHtml = '')
     {
-        $from = new \SendGrid\Email($this->name, $this->from);
-        $to = new \SendGrid\Email($addTo, $addTo);
-        $content = new \SendGrid\Content("text/html", $this->view->render($this->getViewModel($template, $params)));
-        $mail = new \SendGrid\Mail($from, $subject, $to, $content);
-        
-        $copy = new \SendGrid\Email($copyTo, $copyTo);
-        $personalization = new \SendGrid\Personalization();
-        $personalization->addCc($copy);
-        $mail->addPersonalization($personalization);
+        $email = new \SendGrid\Mail\Mail();
+        $email->setFrom($this->from, $this->name);
+        $email->setSubject($subject);
+        $email->addTo($addTo);
+        $email->addContent(
+            "text/html", $this->view->render($this->getViewModel($template, $params))
+        );
+        $email->addCc($copyTo);
         
         // Asignamos si contiene email puro texto.
         if($textWithoutHtml != ''){
-            //$email->setText($textWithoutHtml);
+            $email->addContent("text/plain", $textWithoutHtml);
         }
         // Enviamos Email
-        return $this->service->client->mail()->send()->post($mail);
+        return $this->service->send($email);
     }
     /**
      * 
@@ -103,17 +136,20 @@ class Sendgrid
      */
     public function send($addTo, $subject, $template, $params, $textWithoutHtml = '')
     {
-        $from = new \SendGrid\Email($this->name, $this->from);
-        $to = new \SendGrid\Email($addTo, $addTo);
-        $content = new \SendGrid\Content("text/html", $this->view->render($this->getViewModel($template, $params)));
-        $mail = new \SendGrid\Mail($from, $subject, $to, $content);
+        $email = new \SendGrid\Mail\Mail();
+        $email->setFrom($this->from, $this->name);
+        $email->setSubject($subject);
+        $email->addTo($addTo);
+        $email->addContent(
+            "text/html", $this->view->render($this->getViewModel($template, $params))
+        );
         
         // Asignamos si contiene email puro texto.
         if($textWithoutHtml != ''){
-            //$email->setText($textWithoutHtml);
+            $email->addContent("text/plain", $textWithoutHtml);
         }
         // Enviamos Email
-        return $this->service->client->mail()->send()->post($mail);
+        return $this->service->send($email);
     }
     /**
      * Crea el View Model para generar el HTML
