@@ -208,6 +208,14 @@ class Sendgrid
         $this->service = new \SendGrid($this->apiKey);
     }
     /**
+     * 
+     * @return \SendGrid 
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+    /**
      * Funcion que se encarga de obtener los parametros necesarios
      * @param array $config
      */
