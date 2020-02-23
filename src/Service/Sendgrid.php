@@ -127,6 +127,28 @@ class Sendgrid
     }
     /**
      * 
+     * @param \SendGrid\Mail\Mail $email
+     * @param string $template
+     * @param array $params
+     * @param string $textWithoutHtml
+     * @return type
+     */
+    public function sendWithObject(\SendGrid\Mail\Mail $email, $template, $params, $textWithoutHtml = '')
+    {
+        $email->setFrom($this->from, $this->name);
+        $email->addContent(
+            "text/html", $this->view->render($this->getViewModel($template, $params))
+        );
+        
+        // Asignamos si contiene email puro texto.
+        if($textWithoutHtml != ''){
+            $email->addContent("text/plain", $textWithoutHtml);
+        }
+        // Enviamos Email
+        return $this->service->send($email);
+    }
+    /**
+     * 
      * @param string $addTo
      * @param string $subject
      * @param string $template
@@ -157,7 +179,7 @@ class Sendgrid
      * @param array $vars
      * @return ViewModel
      */
-    protected function getViewModel($template, $vars)
+    public function getViewModel($template, $vars)
     {
         // Creamos view model
         $viewModel = new \Zend\View\Model\ViewModel();
