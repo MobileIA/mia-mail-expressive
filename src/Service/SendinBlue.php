@@ -29,6 +29,11 @@ class SendinBlue extends AbstractService
         $sendSmtpEmail = new \SendinBlue\Client\Model\SendSmtpEmail();
         $sendSmtpEmail->setSubject($subject);
         
+        $sender = new \SendinBlue\Client\Model\SendSmtpEmailSender();
+        $sender->setEmail($this->from);
+        $sender->setName($this->name);
+        $sendSmtpEmail->setSender($sender);
+        
         $toEmail = new \SendinBlue\Client\Model\SendSmtpEmailTo();
         $toEmail->setEmail($addTo);
         $sendSmtpEmail->setTo([$toEmail]);
@@ -40,9 +45,12 @@ class SendinBlue extends AbstractService
             $sendSmtpEmail->setTextContent($textWithoutHtml);
         }
         
-        $sendSmtpEmail->setReplyTo($this->replyTo);
+        $reply = new \SendinBlue\Client\Model\SendSmtpEmailReplyTo();
+        $reply->setEmail($this->replyTo);
+        $reply->setName($this->name);
+        $sendSmtpEmail->setReplyTo($reply);
         // Enviamos Email
-        return $this->apiInstance->sendTransacEmailAsync($sendSmtpEmail);
+        return $this->apiInstance->sendTransacEmail($sendSmtpEmail);
     }
     
     /**
