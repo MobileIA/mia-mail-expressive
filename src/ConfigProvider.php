@@ -37,6 +37,8 @@ class ConfigProvider
             'factories'  => [
                 \Mobileia\Expressive\Mail\Service\Sendgrid::class => \Mobileia\Expressive\Mail\Factory\SendgridFactory::class,
                 \Mobileia\Expressive\Mail\Handler\SendgridHandler::class => \Mobileia\Expressive\Mail\Factory\SendgridHandlerFactory::class,
+                \Mobileia\Expressive\Mail\Service\SendinBlue::class => \Mobileia\Expressive\Mail\Factory\SendinBlueFactory::class,
+                \Mobileia\Expressive\Mail\Handler\SendinBlueHandler::class => \Mobileia\Expressive\Mail\Factory\SendinBlueHandlerFactory::class,
             ],
         ];
     }

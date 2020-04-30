@@ -40,6 +40,7 @@ class SendinBlue extends AbstractService
             $sendSmtpEmail->setTextContent($textWithoutHtml);
         }
         
+        $sendSmtpEmail->setReplyTo($this->replyTo);
         // Enviamos Email
         return $this->apiInstance->sendTransacEmailAsync($sendSmtpEmail);
     }
