@@ -52,6 +52,48 @@ class SendinBlue extends AbstractService
         // Enviamos Email
         return $this->apiInstance->sendTransacEmail($sendSmtpEmail);
     }
+    /**
+     * 
+     * @param string $addTo
+     * @param string $subject
+     * @param string $template
+     * @param array $params
+     * @param string $textWithoutHtml
+     * @return type
+     */
+    public function sendWithFile($addTo, $subject, $template, $params, $fileUrl, $filename, $textWithoutHtml = '')
+    {
+        $sendSmtpEmail = new \SendinBlue\Client\Model\SendSmtpEmail();
+        $sendSmtpEmail->setSubject($subject);
+        
+        $sender = new \SendinBlue\Client\Model\SendSmtpEmailSender();
+        $sender->setEmail($this->from);
+        $sender->setName($this->name);
+        $sendSmtpEmail->setSender($sender);
+        
+        $toEmail = new \SendinBlue\Client\Model\SendSmtpEmailTo();
+        $toEmail->setEmail($addTo);
+        $sendSmtpEmail->setTo([$toEmail]);
+        
+        $sendSmtpEmail->setHtmlContent($this->view->render($this->getViewModel($template, $params)));
+        
+        $file = new \SendinBlue\Client\Model\SendSmtpEmailAttachment();
+        $file->setName($filename);
+        $file->setUrl($fileUrl);
+        $sendSmtpEmail->setAttachment([$file]);
+        
+        // Asignamos si contiene email puro texto.
+        if($textWithoutHtml != ''){
+            $sendSmtpEmail->setTextContent($textWithoutHtml);
+        }
+        
+        $reply = new \SendinBlue\Client\Model\SendSmtpEmailReplyTo();
+        $reply->setEmail($this->replyTo);
+        $reply->setName($this->name);
+        $sendSmtpEmail->setReplyTo($reply);
+        // Enviamos Email
+        return $this->apiInstance->sendTransacEmail($sendSmtpEmail);
+    }
     
     /**
      * Funcion que se encarga de crear el servicio
